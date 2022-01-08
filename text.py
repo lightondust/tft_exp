@@ -76,37 +76,43 @@ def search():
 def view():
     text_file_in_query = params.get('text_file')
     text_file_selected = st.sidebar.selectbox('text', [''] + list(text_data.keys()))
+    text_file = ''
     if text_file_selected:
         text_file = text_file_selected
     else:
         if text_file_in_query:
             text_file = text_file_in_query[0]
-    st.title(text_file)
-    cont = text_data[text_file]
 
-    cont_query = params.get('cont_idx')
-    cont_idx_select = st.selectbox('pos', [None] + list(range(len(cont))))
-    if cont_idx_select:
-        cont_idx = int(cont_idx_select)
-    else:
-        cont_idx = cont_query[0]
-    cont_idx = int(cont_idx)
+    if text_file:
+        st.title(text_file)
+        cont = text_data[text_file]
 
-    itm_no = st.slider('item no', 0, 100, 10, 1)
-    itm_no = int(itm_no)
+        cont_query = params.get('cont_idx')
+        cont_idx_select = st.selectbox('pos', [None] + list(range(len(cont))))
+        cont_idx = 0
+        if cont_idx_select:
+            cont_idx = int(cont_idx_select)
+        else:
+            if cont_query:
+                cont_idx = cont_query[0]
 
-    pre_page = st.button('pre page')
-    next_page = st.button('next page')
-    if next_page:
-        cont_idx += itm_no
-    if pre_page:
-        cont_idx -= itm_no
-    st.write(cont_idx)
-    params['cont_idx'] = [cont_idx]
-    st.experimental_set_query_params(**params)
+        cont_idx = int(cont_idx)
 
-    for i in range(cont_idx-itm_no//2, cont_idx+itm_no//2):
-        st.write(cont[i])
+        itm_no = st.slider('item no', 0, 100, 10, 1)
+        itm_no = int(itm_no)
+
+        pre_page = st.button('pre page')
+        next_page = st.button('next page')
+        if next_page:
+            cont_idx += itm_no
+        if pre_page:
+            cont_idx -= itm_no
+        st.write(cont_idx)
+        params['cont_idx'] = [cont_idx]
+        st.experimental_set_query_params(**params)
+
+        for i in range(cont_idx-itm_no//2, cont_idx+itm_no//2):
+            st.write(cont[i])
 
 
 if page:
